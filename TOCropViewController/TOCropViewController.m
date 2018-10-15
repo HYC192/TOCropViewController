@@ -249,22 +249,38 @@ CGFloat titleLabelHeight;
         frame.origin.x = 0.0f;
         
         if (self.toolbarPosition == TOCropViewControllerToolbarPositionBottom) {
-            frame.origin.y = CGRectGetHeight(self.view.bounds) - 44.0f;
+            frame.origin.y = CGRectGetHeight(self.view.bounds) - (44.0f + [self TO_noneBarHeight]);
         } else {
             frame.origin.y = 0;
         }
         
         frame.size.width = CGRectGetWidth(self.view.bounds);
-        frame.size.height = 44.0f;
+        frame.size.height = 44.0f + [self TO_noneBarHeight];
         
         // If the bar is at the top of the screen and the status bar is visible, account for the status bar height
         if (self.toolbarPosition == TOCropViewControllerToolbarPositionTop && self.prefersStatusBarHidden == NO) {
-            frame.size.height = 64.0f;
+            frame.size.height = 44.0f+[self TO_statusBarHeight];
         }
     }
     
     return frame;
 }
+
+- (BOOL)TO_isIPhoneX {
+    return (CGSizeEqualToSize([UIScreen mainScreen].bounds.size, CGSizeMake(375, 812)) ||
+            CGSizeEqualToSize([UIScreen mainScreen].bounds.size, CGSizeMake(812, 375)) ||
+            CGSizeEqualToSize([UIScreen mainScreen].bounds.size, CGSizeMake(414, 896)) ||
+            CGSizeEqualToSize([UIScreen mainScreen].bounds.size, CGSizeMake(896, 414)));
+}
+
+- (CGFloat)TO_statusBarHeight {
+    return [self TO_isIPhoneX] ? 44 : 20;
+}
+
+- (CGFloat)TO_noneBarHeight {
+    return [self TO_isIPhoneX] ? 34.0f : 0;
+}
+
 
 - (CGRect)frameForCropViewWithVerticalLayout:(BOOL)verticalLayout
 {
@@ -296,11 +312,11 @@ CGFloat titleLabelHeight;
         if (_toolbarPosition == TOCropViewControllerToolbarPositionBottom) {
             frame.origin.y = 0.0f;
         } else {
-            frame.origin.y = 44.0f;
+            frame.origin.y = 44.0f + [self TO_noneBarHeight];
         }
         
         frame.size.width = CGRectGetWidth(bounds);
-        frame.size.height = CGRectGetHeight(bounds) - 84.0f;
+        frame.size.height = CGRectGetHeight(bounds) - (44.0f + [self TO_noneBarHeight]);
     }
     
     return frame;
