@@ -129,7 +129,7 @@ CGFloat titleLabelHeight;
     [self.view addSubview:self.toolbarClampView];
     
     [self loadingClampNewView];
-    self.toolbarClampView.hidden = true;
+    self.toolbarClampView.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -546,13 +546,10 @@ CGFloat titleLabelHeight;
         return;
     }
     
+    self.toolbarClampView.hidden = !self.toolbarClampView.isHidden;
     
-    self.toolbarClampView.hidden = false;
     //Depending on the shape of the image, work out if horizontal, or vertical options are required
-    BOOL verticalCropBox = self.cropView.cropBoxAspectRatioIsPortrait;
-    
-    
-    
+    //    BOOL verticalCropBox = self.cropView.cropBoxAspectRatioIsPortrait;
     
     
 }
@@ -622,7 +619,13 @@ CGFloat titleLabelHeight;
     
     [self.cropView setAspectRatio:aspectRatio animated:animated];
     if (aspectRatioPreset == TOCropViewControllerAspectRatioPresetCustom) {
-        self.aspectRatioLockEnabled = NO;
+        self.toolbar.clampButton.hidden = YES;
+    }
+    else
+    {
+        if (self.toolbar.clampButton.isHidden) {
+            self.toolbar.clampButton.hidden = NO;
+        }
     }
 }
 
@@ -1025,7 +1028,7 @@ CGFloat titleLabelHeight;
 
 - (void)setAspectRatioLockEnabled:(BOOL)aspectRatioLockEnabled
 {
-    self.toolbar.clampButtonGlowing = aspectRatioLockEnabled;
+    //    self.toolbar.clampButtonGlowing = aspectRatioLockEnabled;
     self.cropView.aspectRatioLockEnabled = aspectRatioLockEnabled;
     if (!self.aspectRatioPickerButtonHidden) {
         self.aspectRatioPickerButtonHidden = (aspectRatioLockEnabled && self.resetAspectRatioEnabled == NO);
